@@ -1,0 +1,17 @@
+﻿<Window x:Class="SMS_Sender.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SMS_Sender"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <TextBox x:Name="Pais" HorizontalAlignment="Left" Height="41" Margin="10,10,0,0" TextWrapping="Wrap" Text="Código do país" VerticalAlignment="Top" Width="179"/>
+        <TextBox x:Name="Mensagem" Height="126" Margin="10,56,10,0" TextWrapping="Wrap" Text="Mensagem" VerticalAlignment="Top"/>
+        <Button x:Name="Enviar" Content="Enviar" HorizontalAlignment="Left" Margin="10,187,0,0" VerticalAlignment="Top" Width="98" Height="33" Click="Enviar_Click_1"/>
+		<TextBox x:Name="DDD" HorizontalAlignment="Left" Height="41" Margin="194,10,0,0" TextWrapping="Wrap" Text="DDD" VerticalAlignment="Top" Width="179"/>
+		<TextBox x:Name="Numero" HorizontalAlignment="Left" Height="41" Margin="378,10,0,0" TextWrapping="Wrap" Text="Numero" VerticalAlignment="Top" Width="179"/>
+
+	</Grid>
+</Window>
