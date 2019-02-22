@@ -218,7 +218,7 @@ namespace SMS_Sender
             try
             {
                 WebClient client = new System.Net.WebClient();
-                Stream S = client.OpenRead(string.Format("https://platform.clickatell.com/messages/http/send?apiKey=4yOpE021Q9OVBESLp77EfA==&to={0}&content={1}", Var_class.Cod_pais + Var_class.Cod_pais, Var_class.Numero, Var_class.Mensagem));
+                Stream S = client.OpenRead(string.Format("https://platform.clickatell.com/messages/http/send?apiKey=4yOpE021Q9OVBESLp77EfA==&to={0}&content={1}", Var_class.Cod_pais + Var_class.DDD + Var_class.Numero, Var_class.Mensagem));
                 StreamReader reader = new StreamReader(S);
                 string result = reader.ReadToEnd();
                 MessageBox.Show("Enviado com sucesso para: +" + Var_class.Cod_pais + " (" + Var_class.DDD + ") " + Var_class.Numero, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
