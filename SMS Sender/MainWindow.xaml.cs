@@ -16,6 +16,7 @@ using System.Security.Cryptography;
 using System.Net;
 using System.IO;
 using System.Diagnostics;
+using System.Timers;
 
 namespace SMS_Sender
 {
@@ -31,18 +32,22 @@ namespace SMS_Sender
         {
             InitializeComponent();
 
+            //Exibe na tela a ausência de países selecionados
             if (Lista_de_paises.SelectedItem == null)
             {
                 Pais_selecionado.Content = "Nenhum país selecionado";
                 Pais_selecionado.Foreground = Brushes.Red;
             }
-
+            
+            //Altera a cor dos TextBox para simular um place holder
             DDD.Foreground = Brushes.Gray;
             Numero.Foreground = Brushes.Gray;
             Mensagem.Foreground = Brushes.Gray;
         }
 
         #region DDD
+
+        //Funções destinadas para behaviors do campo DDD
 
         private void DDD_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -74,6 +79,8 @@ namespace SMS_Sender
 
         #region Numero
 
+        //Funções destinadas para behaviors do campo Número
+
         private void Numero_GotFocus(object sender, RoutedEventArgs e)
         {
             if (Numero.Text == "Número")
@@ -100,6 +107,8 @@ namespace SMS_Sender
         #endregion
 
         #region Mensagem
+
+        //Funções destinadas para behaviors do campo de mensagens
 
         private void Mensagem_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -129,12 +138,14 @@ namespace SMS_Sender
 
         private void Enviar_Click(object sender, RoutedEventArgs e)
         {
+            //Limpa campo de resultados e verifica as informações inseridas
             Resultado.Content = "";
             Verificar_Dados();
         }
 
         private void Cancelar_Click(object sender, RoutedEventArgs e)
         {
+            //Restaura as informações inseridas pelo usuário, com exceção do país
             DDD.Text = "DDD";
             DDD.Foreground = Brushes.Gray;
 
@@ -143,10 +154,13 @@ namespace SMS_Sender
 
             Numero.Text = "Número";
             Numero.Foreground = Brushes.Gray;
+
+            Resultado.Content = "";
         }
 
         private void Verificar_Dados()
         {
+            //Realiza a verificação dos dados que foram inseridos e as respectivas validades
 
             #region Check_Pais
 
@@ -235,15 +249,18 @@ namespace SMS_Sender
 
         private void Enviar_Mensagem()
         {
-
+            //Realiza o envio da mensagem para o destinatário inserido, exibe mensagem de feedback e inicia rotina de mensagem de feedback
             try
             {
                 WebClient client = new System.Net.WebClient();
                 Stream S = client.OpenRead(string.Format("https://platform.clickatell.com/messages/http/send?apiKey=4yOpE021Q9OVBESLp77EfA==&to={0}&content={1}", Var_class.Cod_pais + Var_class.DDD + Var_class.Numero, Var_class.Mensagem));
                 StreamReader reader = new StreamReader(S);
                 string result = reader.ReadToEnd();
+
                 Resultado.Content = "Mensagem enviada com sucesso para: +" + Var_class.Cod_pais + " (" + Var_class.DDD + ") " + Var_class.Numero;
                 Resultado.Foreground = Brushes.Green;
+
+                Iniciar_Timer_Esconder_Mensagem();
             }
             catch (Exception ex)
             {
@@ -253,7 +270,7 @@ namespace SMS_Sender
 
         private void Lista_de_paises_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            //Exibe para o usuário o país que foi escolhido
             int index = Lista_de_paises.SelectedIndex;
 
             switch (index)
@@ -278,6 +295,24 @@ namespace SMS_Sender
 
 
         }
+
+        private void Iniciar_Timer_Esconder_Mensagem()
+        {
+            //Define os atributos e inicia a contagem regressiva do timer
+            Var_class.Timer_esconder_resultado.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            Var_class.Timer_esconder_resultado.Interval = 4000;
+            Var_class.Timer_esconder_resultado.Enabled = true;
+        }
+
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            //Executa a manipulação do resultado em outra thread
+            this.Dispatcher.Invoke(() =>
+            {
+                Resultado.Content = "";
+            });
+        }
+
     }
 }
 
