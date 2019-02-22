@@ -30,6 +30,13 @@ namespace SMS_Sender
         public MainWindow()
         {
             InitializeComponent();
+
+            if (Lista_de_paises.SelectedItem == null)
+            {
+                Pais_selecionado.Content = "Nenhum país selecionado";
+                Pais_selecionado.Foreground = Brushes.Red;
+            }
+
             DDD.Foreground = Brushes.Gray;
             Numero.Foreground = Brushes.Gray;
             Mensagem.Foreground = Brushes.Gray;
@@ -120,9 +127,22 @@ namespace SMS_Sender
 
         #endregion
 
-        private void Enviar_Click_1(object sender, RoutedEventArgs e)
+        private void Enviar_Click(object sender, RoutedEventArgs e)
         {
+            Resultado.Content = "";
             Verificar_Dados();
+        }
+
+        private void Cancelar_Click(object sender, RoutedEventArgs e)
+        {
+            DDD.Text = "DDD";
+            DDD.Foreground = Brushes.Gray;
+
+            Mensagem.Text = "Mensagem";
+            Mensagem.Foreground = Brushes.Gray;
+
+            Numero.Text = "Número";
+            Numero.Foreground = Brushes.Gray;
         }
 
         private void Verificar_Dados()
@@ -215,21 +235,49 @@ namespace SMS_Sender
 
         private void Enviar_Mensagem()
         {
+
             try
             {
                 WebClient client = new System.Net.WebClient();
                 Stream S = client.OpenRead(string.Format("https://platform.clickatell.com/messages/http/send?apiKey=4yOpE021Q9OVBESLp77EfA==&to={0}&content={1}", Var_class.Cod_pais + Var_class.DDD + Var_class.Numero, Var_class.Mensagem));
                 StreamReader reader = new StreamReader(S);
                 string result = reader.ReadToEnd();
-                MessageBox.Show("Enviado com sucesso para: +" + Var_class.Cod_pais + " (" + Var_class.DDD + ") " + Var_class.Numero, "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                Resultado.Content = "Mensagem enviada com sucesso para: +" + Var_class.Cod_pais + " (" + Var_class.DDD + ") " + Var_class.Numero;
+                Resultado.Foreground = Brushes.Green;
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Message", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void Lista_de_paises_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            int index = Lista_de_paises.SelectedIndex;
+
+            switch (index)
+            {
+                case 0:
+                    Pais_selecionado.Content = "País selecionado: Brasil (+55)";
+                    Pais_selecionado.Foreground = Brushes.Green;
+                    break;
+                case 1:
+                    Pais_selecionado.Content = "País selecionado: País selecionado: EUA (+1)";
+                    Pais_selecionado.Foreground = Brushes.Green;
+                    break;
+                case 2:
+                    Pais_selecionado.Content = "País selecionado: País selecionado: Reino Unido (+44)";
+                    Pais_selecionado.Foreground = Brushes.Green;
+                    break;
+                default:
+                    Pais_selecionado.Content = "Nenhum país selecionado";
+                    Pais_selecionado.Foreground = Brushes.Red;
+                    break;
+            }
+
+
+        }
     }
-
-
 }
 
